@@ -40,6 +40,7 @@ class PointsController extends Controller
                 'geometry_point' => 'required',
                 'name' => 'required|string|max:255',
                 'description' => 'required|string',
+                'image' => 'nullable|image|miness:jpeg,png,jpg|max:2048',
             ],
             [
                 'geometry_point.required' => 'Field geometry point harus diisi.',
@@ -48,13 +49,30 @@ class PointsController extends Controller
                 'name.max' => 'Field name tidak boleh lebih dari 255 karakter.',
                 'description.required' => 'Field description harus diisi.',
                 'description.string' => 'Field description harus berupa string.',
+                'image.miness' => 'Field image harus berupa jpeg,png,jpg.',
+                'image.max' => 'Field image tidak boleh lebih dari 2MB.',
+                'image.image' => 'Field image harus berupa gambar.',
             ]
         );
+
+        if (!is_dir('storage/images')) {
+            mkdir('./storage/images', 0777);
+        }
+
+        //Get Upload
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $name_image = time() . "_point." . strtolower($image->getClientOriginalExtension());
+            $image->move('storage/images', $name_image);
+        } else {
+        $name_image = null;
+        }
 
         $data = [
             'geom'=>$request->geometry_point,
             'name'=>$request->name,
             'description'=>$request->description,
+            'image' => $name_image
         ];
 
         //simpan data ke database

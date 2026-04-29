@@ -6,10 +6,10 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
-            <a class="nav-link active" aria-current="page" href="{{ route('home') }}">Home</a>
-            <a class="nav-link" href="{{ route('map') }}">Peta</a>
-            <a class="nav-link" href="{{ route('tabel') }}">Tabel</a>
-            <a class="nav-link disabled" aria-disabled="true">Tentang</a>
+            <a class="nav-link active" aria-current="page" href="{{ route('home') }}"> <i class="fa-solid fa-house"></i> Home</a>
+            <a class="nav-link" href="{{ route('map') }}"> <i class="fa-solid fa-earth-americas"></i> Peta</a>
+            <a class="nav-link" href="{{ route('tabel') }}"> <i class="fa-solid fa-table"></i> Tabel</a>
+            <a class="nav-link disabled" aria-disabled="true"> <i class="fa-solid fa-pen"></i> Tentang</a>
           </div>
         </div>
       </div>
