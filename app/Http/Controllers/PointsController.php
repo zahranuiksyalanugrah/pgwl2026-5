@@ -34,26 +34,21 @@ class PointsController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi input
-        $request->validate(
-            [
-                'geometry_point' => 'required',
-                'name' => 'required|string|max:255',
-                'description' => 'required|string',
-                'image' => 'nullable|image|miness:jpeg,png,jpg|max:2048',
-            ],
-            [
-                'geometry_point.required' => 'Field geometry point harus diisi.',
-                'name.required' => 'Field name harus diisi.',
-                'name.string' => 'Field name harus berupa string.',
-                'name.max' => 'Field name tidak boleh lebih dari 255 karakter.',
-                'description.required' => 'Field description harus diisi.',
-                'description.string' => 'Field description harus berupa string.',
-                'image.miness' => 'Field image harus berupa jpeg,png,jpg.',
-                'image.max' => 'Field image tidak boleh lebih dari 2MB.',
-                'image.image' => 'Field image harus berupa gambar.',
-            ]
-        );
+        // validasi input
+        $request->validate([
+            'geometry_point' => 'required',
+            'name' => 'required',
+            'description' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ], [
+            'geometry_point.required' => 'Geometri point harus diisi.',
+            'name.required' => 'Nama harus diisi.',
+            'description.required' => 'Deskripsi harus diisi.',
+            'description.string' => 'Field description harus berupa string.',
+            'image.mimes' => 'Field image harus berupa gambar.',
+            'image.max' => 'Field image tidak boleh lebih dari 2MB.',
+            'image.image' => 'Field image harus berupa gambar.',
+        ]);
 
         if (!is_dir('storage/images')) {
             mkdir('./storage/images', 0777);
@@ -113,6 +108,24 @@ class PointsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
-    }
-}
+        //mencari nama file gambar
+        $image = $this->point->find($id)->image;
+
+        //menghapus file gambar jika ada
+        if ($image != null) {
+            if (file_exists('./storage/images/' . $image)) {
+                unlink('./storage/images/' . $image);
+            }
+        }
+
+        //menghapus data dari database
+        if (!$this->point->destroy($id)) {
+            return redirect()->route('map')
+                ->with('error', 'Gagal menghapus data point.');
+        }
+
+        //kembali ke halaman peta
+        return redirect()->route('map')
+            ->with('success', 'Data point berhasil dihapus.');
+            }
+        }
